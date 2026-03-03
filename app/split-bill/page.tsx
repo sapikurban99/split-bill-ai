@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import heic2any from 'heic2any';
 
 interface Item {
     name: string;
@@ -92,6 +91,7 @@ export default function SplitBillPage() {
         if (isHeic) {
             try {
                 console.log('Converting HEIC to JPEG...');
+                const heic2any = (await import('heic2any')).default;
                 const converted = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
                 fileToRead = Array.isArray(converted) ? converted[0] : converted;
                 console.log('HEIC conversion done');
