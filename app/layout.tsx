@@ -1,9 +1,23 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Split Bill - Bagi Tagihan Bareng Teman",
   description: "Upload struk belanjamu, AI kami otomatis membagi item ke teman-temanmu.",
+  applicationName: "Split Bill API",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Split Bill",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#102218",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
