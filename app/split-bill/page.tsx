@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import heic2any from 'heic2any';
 
 interface Item {
     name: string;
@@ -84,7 +85,22 @@ export default function SplitBillPage() {
         }, 600);
 
         const reader = new FileReader();
-        reader.readAsDataURL(file);
+
+        // Convert HEIC/HEIF to JPEG for compatibility
+        let fileToRead: Blob = file;
+        const isHeic = file.type === 'image/heic' || file.type === 'image/heif' || /\.hei[cf]$/i.test(file.name);
+        if (isHeic) {
+            try {
+                console.log('Converting HEIC to JPEG...');
+                const converted = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+                fileToRead = Array.isArray(converted) ? converted[0] : converted;
+                console.log('HEIC conversion done');
+            } catch (heicErr) {
+                console.warn('HEIC conversion failed, sending original:', heicErr);
+            }
+        }
+
+        reader.readAsDataURL(fileToRead);
         reader.onload = async () => {
             const base64 = reader.result;
             try {
@@ -517,7 +533,7 @@ export default function SplitBillPage() {
                                             id="upload"
                                             hidden
                                             onChange={handleFileUpload}
-                                            accept="image/*"
+                                            accept="image/*,.heic,.heif"
                                         />
                                         <label
                                             htmlFor="upload"
